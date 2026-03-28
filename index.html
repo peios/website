@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peios — An operating system built for infrastructure</title>
+  <meta name="description" content="Peios is an operating system where identity, access control, and service management are built in — not bolted on.">
+  <meta property="og:title" content="Peios">
+  <meta property="og:description" content="An operating system where identity, access control, and service management are built in — not bolted on.">
+  <meta property="og:type" content="website">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f5ff', 100: '#e0eaff', 200: '#c2d5ff', 300: '#94b8ff',
+              400: '#6699ff', 500: '#3366cc', 600: '#2952a3', 700: '#1f3d7a',
+              800: '#152952', 900: '#0a1429', 950: '#050a14'
+            }
+          },
+          fontFamily: {
+            display: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    .gradient-text {
+      background: linear-gradient(135deg, #6699ff 0%, #c2d5ff 50%, #6699ff 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-700 { animation-delay: 0.7s; }
+    .delay-800 { animation-delay: 0.8s; }
+
+    .tagline-enter {
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+
+    .tagline-exit {
+      animation: fadeOut 0.3s ease-in forwards;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(102, 153, 255, 0.2);
+      background: linear-gradient(135deg, rgba(102, 153, 255, 0.05) 0%, rgba(102, 153, 255, 0.02) 100%);
+      transform: translateY(-2px);
+    }
+
+    .glow {
+      box-shadow: 0 0 60px rgba(102, 153, 255, 0.08), 0 0 120px rgba(102, 153, 255, 0.04);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(102, 153, 255, 0.2), transparent);
+    }
+
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-brand-950 text-white font-display antialiased">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-brand-950/80 backdrop-blur-lg border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <a href="/" class="text-lg sm:text-xl font-bold tracking-tight">Peios</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/#features" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+        <a href="/compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+        <a href="/download.html" class="text-sm text-gray-400 hover:text-white transition-colors">Download</a>
+        <div class="relative group">
+          <button class="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1">
+            Ecosystem
+            <svg class="w-3.5 h-3.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+          </button>
+          <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-full right-0 mt-2 w-64 bg-brand-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+            <a href="/ecosystem/trail.html" class="block px-4 py-3 hover:bg-white/5 transition-colors">
+              <div class="font-medium text-sm text-white">Trail</div>
+              <div class="text-xs text-gray-400 mt-0.5">Static site generator for documentation</div>
+            </a>
+            <a href="/ecosystem/provium.html" class="block px-4 py-3 hover:bg-white/5 transition-colors border-t border-white/5">
+              <div class="font-medium text-sm text-white">Provium</div>
+              <div class="text-xs text-gray-400 mt-0.5">Kernel module testing framework</div>
+            </a>
+            <a href="/ecosystem/cairn.html" class="block px-4 py-3 hover:bg-white/5 transition-colors border-t border-white/5">
+              <div class="font-medium text-sm text-white">Cairn</div>
+              <div class="text-xs text-gray-400 mt-0.5">File-based project tracker</div>
+            </a>
+          </div>
+        </div>
+        <a href="https://learn.peios.org" class="text-sm px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 transition-colors font-medium">Documentation</a>
+      </div>
+      <button id="site-mobile-toggle" class="md:hidden p-1.5 text-gray-400 hover:text-white" aria-label="Toggle menu">
+        <svg id="site-menu-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="site-menu-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="site-mobile-menu" class="hidden md:hidden border-t border-white/5 bg-brand-950/95 backdrop-blur-lg">
+      <div class="max-w-6xl mx-auto px-4 py-4 space-y-1">
+        <a href="/#features" class="block py-2 px-3 rounded text-sm text-gray-400 hover:text-white hover:bg-white/5">Features</a>
+        <a href="/compare.html" class="block py-2 px-3 rounded text-sm text-gray-400 hover:text-white hover:bg-white/5">Compare</a>
+        <a href="/download.html" class="block py-2 px-3 rounded text-sm text-gray-400 hover:text-white hover:bg-white/5">Download</a>
+        <div class="py-2 px-3">
+          <div class="text-xs text-gray-500 uppercase tracking-widest mb-2">Ecosystem</div>
+          <a href="/ecosystem/trail.html" class="block py-1.5 text-sm text-gray-400 hover:text-white">Trail</a>
+          <a href="/ecosystem/provium.html" class="block py-1.5 text-sm text-gray-400 hover:text-white">Provium</a>
+          <a href="/ecosystem/cairn.html" class="block py-1.5 text-sm text-gray-400 hover:text-white">Cairn</a>
+        </div>
+        <a href="https://learn.peios.org" class="block py-2 px-3 rounded text-sm font-medium text-brand-400 hover:text-brand-300">Documentation</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="w-[800px] h-[800px] bg-brand-600/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 text-center pt-20 sm:pt-24">
+      <div class="animate-fade-up">
+        <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight mb-4 sm:mb-6">
+          <span class="gradient-text">Peios</span>
+        </h1>
+      </div>
+
+      <div class="h-8 sm:h-10 mb-4 sm:mb-6 animate-fade-up delay-200">
+        <p id="rotating-tagline" class="text-lg sm:text-xl md:text-2xl text-brand-300 font-medium"></p>
+      </div>
+
+      <p class="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed animate-fade-up delay-300">
+        An operating system where identity, access control, and service management are built in — not bolted on.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-12 animate-fade-up delay-400">
+        <a href="https://learn.peios.org" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-600 hover:bg-brand-500 transition-all font-semibold text-base hover:shadow-lg hover:shadow-brand-600/20 text-center">
+          Read the Docs
+        </a>
+        <a href="https://github.com/peios" class="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-white/10 hover:border-white/20 transition-all font-semibold text-base text-gray-300 hover:text-white text-center">
+          View Source
+        </a>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-fade-in delay-800">
+        <div class="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center p-1">
+          <div class="w-1 h-2 rounded-full bg-white/40 animate-bounce"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="relative py-16 sm:py-32">
+    <div class="divider"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32">
+      <div class="max-w-2xl">
+        <p class="text-sm font-semibold text-brand-400 uppercase tracking-widest mb-3 sm:mb-4">The problem</p>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight">Managing infrastructure shouldn't mean gluing together a dozen tools.</h2>
+        <p class="text-base sm:text-lg text-gray-400 leading-relaxed mb-4 sm:mb-6">
+          Identity fragmented across LDAP, PAM, and passwd files. Configuration scattered across /etc. Access control split between mode bits, ACLs, SELinux, AppArmor, and capabilities — each with its own vocabulary, its own config format, its own failure modes.
+        </p>
+        <p class="text-base sm:text-lg text-gray-400 leading-relaxed">
+          You can't bolt unified management onto this and have it feel cohesive. You have to own the stack deep enough that the seams disappear.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="relative py-16 sm:py-32">
+    <div class="divider"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32">
+      <div class="text-center mb-10 sm:mb-20">
+        <p class="text-sm font-semibold text-brand-400 uppercase tracking-widest mb-4">What Peios does differently</p>
+        <h2 class="text-3xl sm:text-4xl font-bold">Everything participates in the same model.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="feature-card rounded-2xl p-8 glow">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Identity in the kernel</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Every process carries a token — a rich security context with SIDs, group memberships, privileges, and integrity levels. The kernel evaluates identity on every access decision. No external auth service in the critical path.
+          </p>
+        </div>
+
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">One access control model</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Security descriptors protect every object — files, registry keys, processes, services. One set of concepts, one evaluation pipeline, one set of diagnostic tools. Learn it once, apply it everywhere.
+          </p>
+        </div>
+
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Roles and features</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Install a role — DNS, file services, certificate authority — and it works. No manual configuration. Every role participates in the identity model, the registry, and the management plane automatically.
+          </p>
+        </div>
+
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.354-5.646M12 21a9.004 9.004 0 01-8.354-5.646M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Federation built in</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Domain-join machines, replicate identity across sites, authenticate users across trust boundaries. Federation isn't an add-on — the identity model was designed for it from day one.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Centralized registry</h3>
+          <p class="text-gray-400 leading-relaxed">
+            All configuration lives in one place. Group policy writes to the registry, reconcilers project to the system. No more hunting through scattered config files.
+          </p>
+        </div>
+
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Built-in observability</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Every access decision, privilege use, and security event is auditable. The event pipeline is part of the OS, not a sidecar you bolt on after the fact.
+          </p>
+        </div>
+
+        <div class="feature-card rounded-2xl p-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Admin console</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Manage identity, services, policy, and monitoring from one web interface. Everything the CLI can do, the console can do — because they both speak the same protocol.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture" class="relative py-16 sm:py-32">
+    <div class="divider"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32">
+      <div class="text-center mb-10 sm:mb-20">
+        <p class="text-sm font-semibold text-brand-400 uppercase tracking-widest mb-4">Architecture</p>
+        <h2 class="text-3xl sm:text-4xl font-bold">Built from the kernel up.</h2>
+      </div>
+
+      <div class="max-w-3xl mx-auto">
+        <div class="space-y-4">
+          <!-- Layer: Kernel -->
+          <div class="feature-card rounded-2xl p-6">
+            <div class="flex items-center gap-4">
+              <div class="w-2 h-12 rounded-full bg-brand-500"></div>
+              <div>
+                <h3 class="font-bold text-lg">Kernel — KACS</h3>
+                <p class="text-gray-400 text-sm mt-1">Tokens, security descriptors, AccessCheck, mandatory integrity, process protection, privileges, confinement, auditing. The security model lives here.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="flex justify-center">
+            <div class="w-px h-4 bg-white/10"></div>
+          </div>
+
+          <!-- Layer: Core Services -->
+          <div class="feature-card rounded-2xl p-6">
+            <div class="flex items-center gap-4">
+              <div class="w-2 h-12 rounded-full bg-brand-400"></div>
+              <div>
+                <h3 class="font-bold text-lg">Core Services</h3>
+                <p class="text-gray-400 text-sm mt-1">Registry, authentication, principal store, event logging. The foundational daemons that make the system go.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <div class="w-px h-4 bg-white/10"></div>
+          </div>
+
+          <!-- Layer: Management -->
+          <div class="feature-card rounded-2xl p-6">
+            <div class="flex items-center gap-4">
+              <div class="w-2 h-12 rounded-full bg-brand-300"></div>
+              <div>
+                <h3 class="font-bold text-lg">Management Plane</h3>
+                <p class="text-gray-400 text-sm mt-1">CLI tools, group policy, the admin console. Every management action flows through the same identity and access control model.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <div class="w-px h-4 bg-white/10"></div>
+          </div>
+
+          <!-- Layer: Roles -->
+          <div class="feature-card rounded-2xl p-6">
+            <div class="flex items-center gap-4">
+              <div class="w-2 h-12 rounded-full bg-brand-200"></div>
+              <div>
+                <h3 class="font-bold text-lg">Roles &amp; Features</h3>
+                <p class="text-gray-400 text-sm mt-1">DNS, DHCP, file services, certificate authority, and more. Install what you need — each role inherits identity, access control, and management for free.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap" class="relative py-16 sm:py-32">
+    <div class="divider"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32">
+      <div class="text-center mb-16">
+        <p class="text-sm font-semibold text-brand-400 uppercase tracking-widest mb-4">Roadmap</p>
+        <h2 class="text-3xl sm:text-4xl font-bold">Where we're headed.</h2>
+      </div>
+
+      <div class="relative">
+        <!-- Timeline line -->
+        <div class="absolute left-[23px] top-0 bottom-0 w-px bg-white/10"></div>
+
+        <div class="space-y-12">
+          <!-- v1.0 -->
+          <div class="relative flex gap-6">
+            <div class="w-12 flex-shrink-0 flex justify-center">
+              <div class="w-3 h-3 rounded-full bg-green-400 ring-4 ring-brand-950 mt-1.5"></div>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="font-bold text-lg">v1.0 — Peios Lite</h3>
+                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-500/10 text-green-400 border border-green-500/20">In progress</span>
+              </div>
+              <p class="text-gray-400 text-sm leading-relaxed">The foundation. KACS kernel security model, peinit service manager, registry, authentication, principal store, event logging. A bootable system with the complete security model and core services.</p>
+            </div>
+          </div>
+
+          <!-- v1.x -->
+          <div class="relative flex gap-6">
+            <div class="w-12 flex-shrink-0 flex justify-center">
+              <div class="w-3 h-3 rounded-full bg-brand-400 ring-4 ring-brand-950 mt-1.5"></div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">v1.x — Management and roles</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Admin console, CLI tooling, group policy, and the first installable roles: DNS, DHCP, certificate authority, file services. The system becomes usable for real infrastructure.</p>
+            </div>
+          </div>
+
+          <!-- v1.x Federation -->
+          <div class="relative flex gap-6">
+            <div class="w-12 flex-shrink-0 flex justify-center">
+              <div class="w-3 h-3 rounded-full bg-brand-400 ring-4 ring-brand-950 mt-1.5"></div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">v1.x — Federation</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Domain provisioning, multi-site replication, cross-domain trust. Machines join domains, users authenticate across sites, group policy propagates. The identity model reaches its full potential.</p>
+            </div>
+          </div>
+
+          <!-- v2.0 -->
+          <div class="relative flex gap-6">
+            <div class="w-12 flex-shrink-0 flex justify-center">
+              <div class="w-3 h-3 rounded-full bg-gray-600 ring-4 ring-brand-950 mt-1.5"></div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">v2.0 — Peios</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">The full platform. Xen-based hypervisor, hardware-backed Secure Boot, DeepTrust security hardening, first-class VM management. VMs participate in the domain model as first-class citizens with their own identities and security descriptors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative py-16 sm:py-32">
+    <div class="divider"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-32 text-center">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">Understand every layer.</h2>
+      <p class="text-base sm:text-lg text-gray-400 max-w-xl mx-auto mb-8 sm:mb-10">
+        Peios Learn covers the entire security model — from identity fundamentals through access control, integrity, privileges, and beyond.
+      </p>
+      <a href="https://learn.peios.org" class="inline-block px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg bg-brand-600 hover:bg-brand-500 transition-all font-semibold text-base sm:text-lg hover:shadow-lg hover:shadow-brand-600/20">
+        Explore the Documentation
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-12">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <span>Peios</span>
+      <div class="flex items-center gap-6">
+        <a href="https://learn.peios.org" class="hover:text-gray-300 transition-colors">Documentation</a>
+        <a href="https://github.com/peios" class="hover:text-gray-300 transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    var taglines = [
+      "One OS. One identity. Everything connected.",
+      "Install a role. It just works.",
+      "The operating system your servers deserve.",
+      "Security built in, not bolted on.",
+      "Federation out of the box.",
+      "Enterprise management without the enterprise.",
+      "Stop gluing your infrastructure together.",
+      "Identity-first infrastructure."
+    ];
+
+    var el = document.getElementById('rotating-tagline');
+    var current = Math.floor(Math.random() * taglines.length);
+
+    function showTagline() {
+      el.classList.remove('tagline-enter');
+      el.classList.add('tagline-exit');
+      setTimeout(function() {
+        current = (current + 1) % taglines.length;
+        el.textContent = taglines[current];
+        el.classList.remove('tagline-exit');
+        el.classList.add('tagline-enter');
+      }, 300);
+    }
+
+    // Initial
+    el.textContent = taglines[current];
+    el.classList.add('tagline-enter');
+
+    // Rotate every 4 seconds
+    setInterval(showTagline, 4000);
+
+    // Mobile menu toggle
+    var siteToggle = document.getElementById('site-mobile-toggle');
+    var siteMenu = document.getElementById('site-mobile-menu');
+    var siteOpen = document.getElementById('site-menu-open');
+    var siteClose = document.getElementById('site-menu-close');
+    siteToggle.addEventListener('click', function() {
+      var hidden = siteMenu.classList.contains('hidden');
+      siteMenu.classList.toggle('hidden');
+      siteOpen.classList.toggle('hidden', !hidden);
+      siteClose.classList.toggle('hidden', hidden);
+    });
+  </script>
+
+</body>
+</html>
